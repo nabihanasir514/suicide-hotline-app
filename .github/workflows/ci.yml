@@ -1,0 +1,42 @@
+name: HopeConnect CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flask flask-cors pytest
+      - name: Run tests
+        run: |
+          python -m pytest test_app.py -v
+
+  build-docker:
+    name: Build Docker Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Image
+        run: |
+          docker build -t hotline-app:v1 .
+      - name: Container Health Check
+        run: |
+          docker run -d --name test-container -p 5000:5000 hotline-app:v1
+          sleep 5
+          curl --fail http://localhost:5000/health || (docker logs test-container && exit 1)
+          docker stop test-container
+          docker rm test-container
