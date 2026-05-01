@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HopeConnect | A safe space for real conversations.</title>
+    <meta name="description" content="Connect anonymously with verified peer counselors. No judgment, just genuine human connection.">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Global Nav -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">
+            <i data-lucide="heart" size="20"></i>
+            <span>HopeConnect</span>
+        </a>
+        <div class="nav-center">
+            <a href="volunteer.html">Become a Helper</a>
+            <a href="seeker.html">Seeker Portal</a>
+            <a href="admin_login.html">Admin Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="resources.html#helplines" class="btn btn-primary">Seek Help</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-pill">
+            <i data-lucide="heart" size="14"></i>
+            You don't have to carry this alone
+        </div>
+        <h1>A safe space for <span class="teal">real conversations.</span></h1>
+        <p>Connect anonymously with verified peer counselors who understand. No judgment, no clinical sterility—just genuine human connection when you need it most.</p>
+        <div class="hero-actions">
+            <a href="seeker.html" class="btn btn-primary btn-lg">Share Your Story Anonymously</a>
+            <a href="resources.html" class="btn btn-outline btn-lg">Find a Helper</a>
+        </div>
+    </section>
+
+    <!-- Recent Posts Preview -->
+    <section class="page-section" style="text-align: center;">
+        <h2 class="section-title">Recent from the <span class="teal">Community</span></h2>
+        <p class="section-subtitle">Anonymous stories shared by people like you.</p>
+        <div id="landing-posts-grid" class="card-grid">
+            <!-- Posts will load here -->
+            <div class="card" style="text-align: center; padding: 40px; grid-column: 1 / -1;">
+                <p style="color: var(--text-muted);">Loading community stories...</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="page-section">
+        <div class="cta-banner">
+            <h2>Want to help someone along the way?</h2>
+            <p>Join our community of verified helpers. Your experience could be exactly what someone needs to hear today.</p>
+            <a href="volunteer.html" class="btn btn-tan btn-lg">Apply to Become a Helper →</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h4>HopeConnect</h4>
+                <p>A quiet, dignified space where vulnerability is safe and help is always within reach.</p>
+            </div>
+            <div>
+                <h4>Community</h4>
+                <a href="seeker.html">Community Board</a>
+                <a href="resources.html">Find a Helper</a>
+                <a href="admin.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Get Involved</h4>
+                <a href="volunteer.html">Become a Helper</a>
+                <a href="admin.html">Admin Panel</a>
+            </div>
+            <div>
+                <h4>Emergency Support</h4>
+                <p>National Suicide Prevention Lifeline: 988</p>
+                <p>Crisis Text Line: Text HOME to 741741</p>
+                <p>Pakistan Helpline: 1166</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            2026 HopeConnect. This platform is for peer support and does not replace professional medical advice.
+        </div>
+    </footer>
+
+    <script>
+        async function loadLandingPosts() {
+            try {
+                const res = await fetch('/api/posts');
+                const posts = await res.json();
+                const grid = document.getElementById('landing-posts-grid');
+                grid.innerHTML = posts.slice(0, 3).map(p => `
+                    <div class="post-card" style="text-align: left;">
+                        <div class="post-alias">${p.alias}</div>
+                        <div class="post-time">${p.timestamp}</div>
+                        <div class="post-body">${p.content}</div>
+                        <div class="post-footer">
+                            <span><i data-lucide="message-square" size="14"></i> ${p.replies.length}</span>
+                            <span><i data-lucide="thumbs-up" size="14"></i> 0 helpful</span>
+                            <a href="seeker.html">View Thread →</a>
+                        </div>
+                    </div>
+                `).join('');
+                lucide.createIcons();
+            } catch (e) { console.error(e); }
+        }
+        window.onload = loadLandingPosts;
+        lucide.createIcons();
+    </script>
+</body>
+</html>

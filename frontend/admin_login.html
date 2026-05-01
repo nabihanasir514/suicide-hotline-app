@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | HopeConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-light);
+            padding: 20px;
+        }
+        .login-card {
+            width: 100%;
+            max-width: 420px;
+            padding: 50px;
+            text-align: center;
+        }
+        .login-logo {
+            margin-bottom: 30px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="card login-card">
+            <div class="login-logo">
+                <i data-lucide="heart" size="24"></i>
+                <span>HopeConnect Admin</span>
+            </div>
+            
+            <h1 class="serif" style="font-size: 2.2rem; margin-bottom: 8px;">Portal Access</h1>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 35px;">Enter your administrative credentials to continue.</p>
+
+            <div class="form-group" style="text-align: left;">
+                <label>Administrative Email</label>
+                <input type="email" id="admin-email" placeholder="admin@hopeconnect.com">
+            </div>
+
+            <div class="form-group" style="text-align: left; margin-bottom: 30px;">
+                <label>Password</label>
+                <input type="password" id="admin-password" placeholder="••••••••">
+            </div>
+
+            <button class="btn btn-primary btn-lg w-full" onclick="handleLogin()">Login to Dashboard</button>
+            
+            <p id="error-msg" style="color: var(--emergency); font-size: 0.85rem; margin-top: 20px; display: none;">Invalid credentials. Please try again.</p>
+        </div>
+    </div>
+
+    <script>
+        async function handleLogin() {
+            const email = document.getElementById('admin-email').value;
+            const pass = document.getElementById('admin-password').value;
+            const error = document.getElementById('error-msg');
+
+            // Hardcoded Credentials as requested
+            if (email === 'biha2942@gmail.com' && pass === 'biha2942') {
+                localStorage.setItem('admin_auth', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                error.style.display = 'block';
+            }
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>

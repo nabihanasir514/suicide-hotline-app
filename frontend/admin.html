@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal | HopeConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        // Auth Guard
+        if (localStorage.getItem('admin_auth') !== 'true') {
+            window.location.href = 'admin_login.html';
+        }
+    </script>
+    <style>
+        .admin-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+        .admin-title-group {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .admin-icon-bg {
+            width: 56px;
+            height: 56px;
+            background: #eef1ec;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+        }
+        
+        .admin-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 60px;
+        }
+        .stat-card-pro {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 24px;
+            position: relative;
+            transition: 0.2s;
+        }
+        .stat-card-pro .label { font-size: 0.85rem; font-weight: 500; color: var(--text-muted); }
+        .stat-card-pro .value { font-family: 'Instrument Serif', serif; font-size: 2.8rem; color: var(--text-dark); margin: 8px 0; }
+        .stat-card-pro .sub { font-size: 0.75rem; color: var(--text-muted); }
+        .stat-card-pro .icon { position: absolute; top: 24px; right: 24px; color: var(--text-muted); opacity: 0.6; }
+        
+        .review-section-title { font-family: 'Instrument Serif', serif; font-size: 1.8rem; margin-bottom: 24px; color: var(--text-dark); }
+        
+        .app-review-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        .app-review-header {
+            padding: 30px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .app-review-body {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr;
+            gap: 40px;
+            padding: 30px;
+        }
+        .review-col-title { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 16px; }
+        .review-text-block { background: #fdfdfd; padding: 20px; border-radius: 12px; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.6; }
+        
+        .ref-card-mini {
+            background: #fdfdfd;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        .ref-card-mini h4 { font-size: 1rem; margin-bottom: 4px; }
+        .ref-card-mini .rel { font-size: 0.8rem; color: var(--text-muted); font-weight: 400; }
+        .ref-card-mini .email { color: var(--primary); font-size: 0.85rem; text-decoration: none; display: block; margin-bottom: 12px; }
+        .ref-card-mini .quote { font-style: italic; font-size: 0.85rem; color: var(--text-body); border-left: 2px solid var(--border); padding-left: 12px; }
+
+        .app-review-footer {
+            padding: 20px 30px;
+            background: #fafafa;
+            display: flex;
+            justify-content: flex-end;
+            gap: 16px;
+        }
+        
+        .pill-support { background: var(--accent-tan); color: white; padding: 4px 14px; border-radius: 100px; font-size: 0.8rem; font-weight: 600; margin-right: 6px; }
+
+        @media (max-width: 900px) {
+            .app-review-body { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Nav -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">
+            <i data-lucide="heart" size="20"></i>
+            <span>HopeConnect</span>
+        </a>
+        <div class="nav-center">
+            <a href="volunteer.html">Become a Helper</a>
+            <a href="seeker.html">Seeker Portal</a>
+            <a href="admin.html" class="active">Admin Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="resources.html#helplines" class="btn btn-primary">Seek Help</a>
+        </div>
+    </nav>
+
+    <main class="page-section">
+        <header class="admin-header">
+            <div class="admin-title-group">
+                <div class="admin-icon-bg"><i data-lucide="shield" size="28"></i></div>
+                <div>
+                    <h1 class="serif" style="font-size: 2.8rem; margin-bottom: 4px;">Admin Portal</h1>
+                    <p style="color: var(--text-muted); font-size: 1rem;">Full platform management — helpers, posts, applications & analytics</p>
+                </div>
+            </div>
+            <span class="pill pill-pending" style="padding: 8px 20px; font-weight: 600;" id="pending-count-badge">0 pending review</span>
+        </header>
+
+        <section class="admin-stats-grid">
+            <div class="stat-card-pro">
+                <div class="label">Total Posts</div>
+                <div class="value" id="stat-total_posts">...</div>
+                <div class="sub" id="stat-open_posts">Loading...</div>
+                <div class="icon"><i data-lucide="message-square"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Resolved Posts</div>
+                <div class="value" id="stat-resolved_posts">...</div>
+                <div class="sub">Total across all time</div>
+                <div class="icon" style="color: #22c55e;"><i data-lucide="check-circle"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Active Helpers</div>
+                <div class="value" id="stat-verified_helpers">...</div>
+                <div class="sub" id="stat-total_helpers">Verified helpers</div>
+                <div class="icon"><i data-lucide="users"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Pending Applications</div>
+                <div class="value" id="stat-pending_apps">...</div>
+                <div class="sub">Review required</div>
+                <div class="icon" style="color: #f59e0b;"><i data-lucide="file-text"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Total Responses</div>
+                <div class="value" id="stat-total_responses">...</div>
+                <div class="sub">Last 30 days</div>
+                <div class="icon" style="color: #06b6d4;"><i data-lucide="zap"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Avg Response Time</div>
+                <div class="value" id="stat-avg_time">...</div>
+                <div class="sub">System efficiency</div>
+                <div class="icon" style="color: #3b82f6;"><i data-lucide="clock"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Top Helper Points</div>
+                <div class="value" id="stat-top_points">...</div>
+                <div class="sub" id="stat-top_helper_name">Leaderboard</div>
+                <div class="icon" style="color: #eab308;"><i data-lucide="star"></i></div>
+            </div>
+            <div class="stat-card-pro">
+                <div class="label">Lives Touched</div>
+                <div class="value" id="stat-lives_touched">...</div>
+                <div class="sub">Platform impact</div>
+                <div class="icon" style="color: #a855f7;"><i data-lucide="heart"></i></div>
+            </div>
+        </section>
+
+        <section id="applications-section">
+            <h2 class="review-section-title">Pending Applications</h2>
+            <div id="applications-container">
+                <!-- Applications will load here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h4>HopeConnect</h4>
+                <p>A quiet, dignified space where vulnerability is safe and help is always within reach.</p>
+            </div>
+            <div>
+                <h4>Community</h4>
+                <a href="seeker.html">Community Board</a>
+                <a href="resources.html">Find a Helper</a>
+                <a href="admin.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Emergency Support</h4>
+                <p>Lifeline: 988</p>
+                <p>Pakistan: 1166</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="admin.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

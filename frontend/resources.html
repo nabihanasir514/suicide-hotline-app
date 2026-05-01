@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Find a Helper | HopeConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Specific Styles for the Resources Interface from Screenshots */
+        .helpline-section {
+            background: var(--primary);
+            padding: 80px 24px;
+            border-radius: var(--radius-lg);
+            margin: 40px 0;
+            text-align: center;
+            color: var(--white);
+        }
+        .helpline-section h2 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 3.5rem;
+            color: var(--white);
+            margin-bottom: 40px;
+        }
+        .helpline-grid-pro {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .helpline-card-pro {
+            background: var(--white);
+            border-radius: 24px;
+            padding: 40px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        .helpline-card-pro .region-tag {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 4px 16px;
+            border-radius: 100px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+        .helpline-card-pro h4 {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .helpline-card-pro .number {
+            font-family: 'Instrument Serif', serif;
+            font-size: 3.2rem;
+            color: var(--primary);
+            margin-bottom: 24px;
+            line-height: 1;
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+        .tool-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+        .tool-card h2 { font-size: 2.2rem; margin-bottom: 16px; }
+        .tool-card p { color: var(--text-muted); margin-bottom: 40px; }
+
+        @media (max-width: 900px) {
+            .tools-grid { grid-template-columns: 1fr; }
+            .helpline-section h2 { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Global Nav -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">
+            <i data-lucide="heart" size="20"></i>
+            <span>HopeConnect</span>
+        </a>
+        <div class="nav-center">
+            <a href="volunteer.html">Become a Helper</a>
+            <a href="seeker.html">Seeker Portal</a>
+            <a href="admin_login.html">Admin Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="resources.html#helplines" class="btn btn-primary">Seek Help</a>
+        </div>
+    </nav>
+
+    <main class="page-section">
+        <section class="helpline-section">
+            <h2>Immediate Helplines</h2>
+            <div id="helpline-grid" class="helpline-grid-pro">
+                <!-- Helplines will load here via resources.js -->
+            </div>
+        </section>
+
+        <div class="tools-grid">
+            <!-- Paced Breathing -->
+            <div class="tool-card">
+                <h2 class="serif">Paced Breathing</h2>
+                <p>Ground yourself with this simple breathing exercise.</p>
+                <div class="breathing-zone" style="height: 300px; margin-bottom: 20px;">
+                    <div id="breathing-circle" class="breathing-circle" style="width: 120px; height: 120px;"></div>
+                    <p id="breathing-instruction" style="margin-top: 30px; font-size: 1.6rem; color: var(--text-dark);">Stopped</p>
+                </div>
+                <button class="btn btn-primary btn-lg" style="width: 100%; border-radius: 100px; padding: 18px;" onclick="toggleBreathing()">Start Breathing Tool</button>
+            </div>
+
+            <!-- Safety Plan -->
+            <div class="tool-card" style="text-align: left; align-items: flex-start;">
+                <h2 class="serif">Personal Safety Plan</h2>
+                <p>Privacy-First: Saved only on your local browser.</p>
+                
+                <div class="form-group" style="width: 100%;">
+                    <label style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">What helps you calm down?</label>
+                    <textarea id="plan-help" placeholder="Music, reading, walking..." style="height: 120px;"></textarea>
+                </div>
+                
+                <div class="form-group" style="width: 100%; margin-top: 24px;">
+                    <label style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">Emergency Contacts</label>
+                    <textarea id="plan-contacts" placeholder="Trustworthy friends or family..." style="height: 120px;"></textarea>
+                </div>
+                
+                <button class="btn btn-outline btn-lg" style="width: 100%; margin-top: 40px; border-radius: 100px;" onclick="savePlan()">Save Plan Locally</button>
+            </div>
+        </div>
+
+        <section style="margin-top: 80px;">
+            <h2 class="serif" style="font-size: 2.8rem; margin-bottom: 40px; text-align: center;">Education & <span class="teal">Articles</span></h2>
+            <div id="education-grid" class="card-grid">
+                <!-- Articles will load here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h4>HopeConnect</h4>
+                <p>A quiet, dignified space where vulnerability is safe and help is always within reach.</p>
+            </div>
+            <div>
+                <h4>Community</h4>
+                <a href="seeker.html">Community Board</a>
+                <a href="resources.html">Find a Helper</a>
+                <a href="admin.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Emergency Support</h4>
+                <p>Lifeline: 988</p>
+                <p>Pakistan: 1166</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="resources.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>

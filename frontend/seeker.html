@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community Board | HopeConnect</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Global Nav -->
+    <nav class="top-nav">
+        <a href="index.html" class="logo">
+            <i data-lucide="heart" size="20"></i>
+            <span>HopeConnect</span>
+        </a>
+        <div class="nav-center">
+            <a href="volunteer.html">Become a Helper</a>
+            <a href="seeker.html" class="active">Seeker Portal</a>
+            <a href="admin_login.html">Admin Dashboard</a>
+        </div>
+        <div class="nav-right">
+            <a href="resources.html#helplines" class="btn btn-primary">Seek Help</a>
+        </div>
+    </nav>
+
+    <!-- Verification Gate Overlay -->
+    <div id="gate-overlay" class="gate-overlay">
+        <div class="card gate-card" style="max-width: 450px; text-align: center; padding: 40px;">
+            <div class="admin-icon-bg" style="margin: 0 auto 24px;"><i data-lucide="shield-check" size="32"></i></div>
+            <h2 class="serif" style="font-size: 2rem; margin-bottom: 12px;">Anonymous Entry</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 30px;">To maintain a safe environment, please verify your email. Your actual identity will never be shown on the board.</p>
+            
+            <div class="form-group" style="text-align: left;">
+                <label>Institutional or Personal Email</label>
+                <input type="email" id="user-email" placeholder="you@example.com">
+            </div>
+            
+            <div class="form-group" style="display: flex; gap: 12px; align-items: center; background: var(--bg-light); padding: 14px; border-radius: 12px; margin-bottom: 30px;">
+                <input type="checkbox" id="gate-captcha" style="width: 20px; height: 20px;">
+                <label style="margin-bottom: 0; font-size: 0.85rem;">I am a human seeking support</label>
+            </div>
+            
+            <button class="btn btn-primary btn-lg w-full" onclick="verifyEntry()">Access Community Board</button>
+        </div>
+    </div>
+
+    <style>
+        .gate-overlay {
+            position: fixed; top: 64px; left: 0; right: 0; bottom: 0;
+            background: rgba(245, 245, 240, 0.95);
+            backdrop-filter: blur(8px);
+            z-index: 90;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+    </style>
+
+    <main class="page-section">
+        <div style="display: flex; justify-content: flex-end; margin-bottom: 20px;">
+            <div class="pill pill-verified" style="display: flex; align-items: center; gap: 8px;">
+                <i data-lucide="user" size="14"></i>
+                <span>Posting as: <strong><span id="session-alias">...</span></strong></span>
+            </div>
+        </div>
+        <header class="view-header" style="text-align: center; margin-bottom: 60px;">
+            <h1 class="section-title">Community <span class="teal">Board</span></h1>
+            <p class="section-subtitle">Speak freely. Your identity is protected by our anonymous alias system.</p>
+        </header>
+
+        <!-- Emergency Banner (Conditional) -->
+        <div id="crisis-banner" class="cta-banner hidden" style="background: var(--emergency); padding: 30px; margin-bottom: 40px;">
+            <h2 style="font-size: 1.5rem;">Immediate Support Available</h2>
+            <p style="margin-bottom: 0;">Call 988 (Global) or 1166 (Pakistan) for 24/7 help.</p>
+        </div>
+
+        <div class="dash-layout">
+            <div class="dash-main">
+                <section class="card" style="margin-bottom: 30px;">
+                    <h3 class="serif" style="font-size: 1.5rem; margin-bottom: 15px;">Create a Post</h3>
+                    <textarea id="post-content" placeholder="Share your thoughts anonymously... our AI keeps the space safe." style="height: 120px;"></textarea>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                        <span id="crisis-tag" class="pill pill-crisis hidden">Crisis Detected</span>
+                        <button class="btn btn-primary" onclick="submitPost()">Post Anonymously</button>
+                    </div>
+                </section>
+
+                <div id="posts-feed" class="feed">
+                    <!-- Posts will load here via seeker.js -->
+                </div>
+            </div>
+
+            <aside class="dash-sidebar">
+                <section class="card" style="margin-bottom: 24px;">
+                    <h3 class="serif" style="font-size: 1.2rem; margin-bottom: 10px;">Daily Mood</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted);">How are you feeling today?</p>
+                    <div class="mood-options">
+                        <button onclick="logMood(1)">😢</button>
+                        <button onclick="logMood(2)">😕</button>
+                        <button onclick="logMood(3)">😐</button>
+                        <button onclick="logMood(4)">🙂</button>
+                        <button onclick="logMood(5)">🌟</button>
+                    </div>
+                </section>
+
+                <section class="card">
+                    <h3 class="serif" style="font-size: 1.2rem; margin-bottom: 15px;">Quick Grounding</h3>
+                    <div id="grounding-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        <!-- Grounding tools load here -->
+                    </div>
+                    <a href="resources.html" class="btn btn-outline w-full" style="margin-top: 20px;">All Resources</a>
+                </section>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <h4>HopeConnect</h4>
+                <p>A quiet, dignified space where vulnerability is safe and help is always within reach.</p>
+            </div>
+            <div>
+                <h4>Community</h4>
+                <a href="seeker.html">Community Board</a>
+                <a href="resources.html">Find a Helper</a>
+                <a href="admin.html">Dashboard</a>
+            </div>
+            <div>
+                <h4>Get Involved</h4>
+                <a href="volunteer.html">Become a Helper</a>
+                <a href="admin.html">Admin Panel</a>
+            </div>
+            <div>
+                <h4>Emergency Support</h4>
+                <p>Lifeline: 988</p>
+                <p>Pakistan: 1166</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="seeker.js"></script>
+    <script>lucide.createIcons();</script>
+</body>
+</html>
