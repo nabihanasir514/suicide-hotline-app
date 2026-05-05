@@ -87,7 +87,7 @@ The application is deployed on an **AWS EC2 t3.micro** instance running **Ubuntu
 | **Instance ID** | i-0ca77d7c5c7f50871 |
 | **Instance Type** | t3.micro (Free Tier Eligible) |
 | **Region** | ap-south-1 (Mumbai) |
-| **Public IP** | 65.2.30.184 |
+| **Public IP** | 13.234.226.40 |
 | **Public DNS** | ec2-65-2-30-184.ap-south-1.compute.amazonaws.com |
 | **OS** | Ubuntu 24.04 LTS |
 
@@ -119,19 +119,19 @@ sudo docker run -d -p 5000:5000 --name production-app --restart=always bihamalik
 ### 6.4 Live Application URLs
 | Page | URL |
 | :--- | :--- |
-| **Home** | http://65.2.30.184:5000/ |
-| **Health Check** | http://65.2.30.184:5000/health |
-| **Seeker Portal** | http://65.2.30.184:5000/seeker |
-| **Volunteer Portal** | http://65.2.30.184:5000/volunteer |
-| **Resources** | http://65.2.30.184:5000/resources |
-| **Admin Panel** | http://65.2.30.184:5000/admin |
+| **Home** | http://13.234.226.40:5000/ |
+| **Health Check** | http://13.234.226.40:5000/health |
+| **Seeker Portal** | http://13.234.226.40:5000/seeker |
+| **Volunteer Portal** | http://13.234.226.40:5000/volunteer |
+| **Resources** | http://13.234.226.40:5000/resources |
+| **Admin Panel** | http://13.234.226.40:5000/admin |
 
 ---
 
 ## 7. Testing Evidence
 *   **Pytest Results**: All 4 tests passing (Health, Resources, AI Detection, 400 Errors).
 *   **GitHub Actions**: Both "Run Pytest" and "Build Docker Image" jobs showing green checkmarks.
-*   **Live App**: Responding at `http://65.2.30.184:5000/health` with `{"status": "ok"}`.
+*   **Live App**: Responding at `http://13.234.226.40:5000/health` with `{"status": "ok"}`.
 
 ---
 

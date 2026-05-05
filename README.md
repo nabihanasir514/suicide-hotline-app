@@ -17,9 +17,13 @@ HopeConnect is a production-grade, AI-powered mental health platform designed to
 ## 📦 Quick Start (Docker)
 ```bash
 docker build -t hotline-app:v1 .
-docker run -d -p 5000:5000 --name hopeconnect-app hotline-app:v1
+docker run -d --restart=always -p 5000:5000 --name hopeconnect-app hotline-app:v1
 ```
-Visit `http://localhost:5000` to see the app in action.
+Visit `http://localhost:5000` to see the app locally.
+
+## 🌐 Live Demo
+The application is currently live on AWS EC2:
+**[http://13.234.226.40:5000](http://13.234.226.40:5000)**
 
 ## 📝 Documentation
 For detailed deployment instructions, architecture diagrams, and testing evidence, please refer to the **[deployment_document.md](deployment_document.md)**.
