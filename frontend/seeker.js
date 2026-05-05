@@ -69,7 +69,7 @@ async function fetchPosts() {
                 <div class="post-time">${p.timestamp}</div>
                 <div class="post-body">${p.content}</div>
                 <div class="post-footer">
-                    <span><i data-lucide="message-square" size="14"></i> ${p.replies.length}</span>
+                    <span><i data-lucide="message-square" size="14"></i> ${(p.replies || []).length}</span>
                     <span><i data-lucide="thumbs-up" size="14"></i> 0 helpful</span>
                     <a href="#" onclick="alert('Thread view coming soon!')">View Thread →</a>
                 </div>

@@ -10,10 +10,19 @@ async function submitHelperApp() {
     }
 
     try {
+        const email = document.getElementById('h-email') ? document.getElementById('h-email').value : "volunteer@email.com";
+        const motivation = document.getElementById('h-motivation') ? document.getElementById('h-motivation').value : "I want to help.";
+
         await fetch('/api/apply', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name, email: "pending@email.com", experience: exp, references: ref })
+            body: JSON.stringify({ 
+                name, 
+                email, 
+                experience: exp, 
+                motivation: motivation,
+                references: ref 
+            })
         });
         alert("Application submitted! We will contact your reference shortly.");
         mockLoginVerified(name);

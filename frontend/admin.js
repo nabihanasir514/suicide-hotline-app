@@ -27,18 +27,23 @@ async function fetchAdminData() {
         if (document.getElementById('stat-open_posts')) {
             document.getElementById('stat-open_posts').innerText = `${openPosts} active posts`;
         }
+        
+        const badge = document.getElementById('pending-count-badge');
+        if (badge) {
+            badge.innerText = `${stats.pending_apps} pending review`;
+        }
 
         // Real-time alerts
         if (lastPostCount !== 0 && stats.total_posts > lastPostCount) {
             showNotification("Activity Update", "New community posts detected.", "message-square");
         }
-        if (lastAlertCount !== 0 && stats.pending_apps > lastAlertCount) {
+        if (lastAlertCount !== 0 && stats.high_risk_posts > lastAlertCount) {
             showNotification("CRITICAL ALERT", "AI detected a high-risk crisis post.", "zap", true);
         }
         if (lastPostCount === 0) showNotification("System Online", "Real-time AI monitoring active.", "shield");
 
         lastPostCount = stats.total_posts;
-        lastAlertCount = stats.pending_apps;
+        lastAlertCount = stats.high_risk_posts;
 
         // Load Applications
         const appContainer = document.getElementById('applications-container');

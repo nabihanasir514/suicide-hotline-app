@@ -85,7 +85,12 @@ def handle_posts():
         execute_db('UPDATE platform_stats SET value = value + 1 WHERE key = "total_posts"')
         return jsonify({"status": "Success"}), 201
     posts = query_db('SELECT * FROM posts ORDER BY id DESC')
-    return jsonify([dict(p) for p in posts]), 200
+    result = []
+    for p in posts:
+        post_dict = dict(p)
+        post_dict['replies'] = [] # Placeholder for replies
+        result.append(post_dict)
+    return jsonify(result), 200
 
 @app.route('/api/admin/stats', methods=['GET'])
 def get_admin_stats():
@@ -93,6 +98,9 @@ def get_admin_stats():
     stats = {row['key']: row['value'] for row in rows}
     stats['avg_time'] = "12.4m"
     stats['top_helper_name'] = "Nabiha Nasir"
+    # Calculate high risk posts count where a flag tagged them high
+    high_risk = query_db('SELECT COUNT(*) as count FROM posts WHERE priority = "High"', one=True)
+    stats['high_risk_posts'] = high_risk['count']
     return jsonify(stats), 200
 
 @app.route('/api/admin/applications', methods=['GET'])
@@ -145,8 +153,17 @@ def log_mood(): return jsonify({"status": "mood logged"}), 200
 @app.route('/api/apply', methods=['POST'])
 def apply_helper():
     data = request.json
+    # Insert application
     execute_db('INSERT INTO applications (name, email, applied_days, motivation, experience, areas) VALUES (?, ?, ?, ?, ?, ?)',
-               (data['name'], data['email'], 'Today', data['experience'], data['experience'], 'General'))
+               (data['name'], data.get('email', 'pending@email.com'), 'Just now', data.get('motivation', 'Sample motivation'), data['experience'], 'General'))
+    
+    app_id = query_db('SELECT last_insert_rowid() as id', one=True)['id']
+    
+    # Insert reference if provided
+    if 'references' in data:
+        execute_db('INSERT INTO refs (app_id, name, relationship, email, quote) VALUES (?, ?, ?, ?, ?)',
+                   (app_id, data['references'], 'Professional', 'ref@email.com', 'Highly recommended.'))
+
     execute_db('UPDATE platform_stats SET value = value + 1 WHERE key = "pending_apps"')
     return jsonify({"status": "Success"}), 200
 

@@ -20,7 +20,8 @@ def init_db():
             content TEXT NOT NULL,
             priority TEXT DEFAULT 'Normal',
             timestamp TEXT NOT NULL,
-            status TEXT DEFAULT 'Open'
+            status TEXT DEFAULT 'Open',
+            type TEXT DEFAULT 'story'
         )
     ''')
 
