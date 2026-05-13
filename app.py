@@ -173,3 +173,78 @@ def get_leaderboard():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
+
+
+from flask import Flask, jsonify, request 
+ 
+app = Flask(__name__) 
+ 
+students = [ 
+    {'id': 1, 'name': 'Memoona', 'grade': 'A'}, 
+    {'id': 2, 'name': 'Sara',    'grade': 'B'}, 
+] 
+next_id = 3   # Tracks the next available ID 
+ 
+# READ ALL 
+@app.route('/api/students', methods=['GET']) 
+def get_students(): 
+    return jsonify(students), 200 
+ 
+# READ ONE 
+@app.route('/api/students/<int:sid>', methods=['GET']) 
+def get_student(sid): 
+    s = next((s for s in students if s['id'] == sid), None) 
+    return (jsonify(s), 200) if s else (jsonify({'error': 'Not found'}), 404) 
+ 
+# CREATE 
+@app.route('/api/students', methods=['POST']) 
+def add_student(): 
+    global next_id 
+ data = request.get_json() 
+    if not data or 'name' not in data or 'grade' not in data: 
+        return jsonify({'error': 'name and grade are required'}), 400 
+    new_student = {'id': next_id, 'name': data['name'], 'grade': 
+data['grade']} 
+    students.append(new_student) 
+    next_id += 1 
+    return jsonify(new_student), 201 
+ 
+# UPDATE 
+@app.route('/api/students/<int:sid>', methods=['PUT']) 
+def update_student(sid): 
+    s = next((s for s in students if s['id'] == sid), None) 
+    if not s: 
+        return jsonify({'error': 'Not found'}), 404 
+    data = request.get_json() 
+    s['name']  = data.get('name',  s['name']) 
+    s['grade'] = data.get('grade', s['grade']) 
+    return jsonify(s), 200 
+ 
+# DELETE 
+@app.route('/api/students/<int:sid>', methods=['DELETE']) 
+def delete_student(sid): 
+    global students 
+    original_len = len(students) 
+    students = [s for s in students if s['id'] != sid] 
+    if len(students) == original_len: 
+        return jsonify({'error': 'Not found'}), 404 
+    return jsonify({'message': 'Deleted successfully'}), 200 
+ 
+if __name__ == '__main__': 
+    app.run(debug=True, port=5000) 
+Start your Flask app in one terminal, then open a second terminal to run the curl commands below. 
+ 
+GET  Read all students 
+$ curl http://localhost:5000/api/students 
+GET  Read one student 
+$ curl http://localhost:5000/api/students/1 
+POST  Create a new student 
+$ curl -X POST http://localhost:5000/api/students \ 
+     -H 'Content-Type: application/json' \ 
+     -d '{"name": "Zara", "grade": "A"}' 
+PUT  Update an existing student 
+$ curl -X PUT http://localhost:5000/api/students/2 \ 
+     -H 'Content-Type: application/json' \ 
+     -d '{"grade": "A+"}' 
+DELETE  Remove a student 
+$ curl -X DELETE http://localhost:5000/api/students/2 
